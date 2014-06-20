@@ -134,6 +134,9 @@ public class BtcJsonRpcHttpClient {
 	private static final String BTCOBJ_COIN_AUX = "coinbaseaux";
 	private static final String BTCOBJ_COIN_VALUE = "coinbasevalue";
 	private static final String BTCOBJ_INFO_BALANCE = "balance";
+	private static final String BTCOBJ_INFO_NEWMINT = "newmint";
+	private static final String BTCOBJ_INFO_STAKE = "stake";
+	private static final String BTCOBJ_INFO_MONEY_SUPPLY = "moneysupply";
 	private static final String BTCOBJ_INFO_BLOCKS = "blocks";
 	private static final String BTCOBJ_INFO_CONNECTIONS = "connections";
 	private static final String BTCOBJ_INFO_CURRENT_BLOCK_SIZE = "currentblocksize";
@@ -142,14 +145,16 @@ public class BtcJsonRpcHttpClient {
 	private static final String BTCOBJ_INFO_ERRORS = "errors";
 	private static final String BTCOBJ_INFO_GENERATE = "generate";
 	private static final String BTCOBJ_INFO_HASHES_PER_SECOND = "hashespersec";
+	private static final String BTCOBJ_INFO_NETWORK_GIGA_HASHES_PER_SECOND = "networkghps";
 	private static final String BTCOBJ_INFO_KEYPOOL_OLDEST = "keypoololdest";
 	private static final String BTCOBJ_INFO_KEYPOOL_SIZE = "keypoolsize";
 	private static final String BTCOBJ_INFO_POOLED_TRANSACTIONS = "pooledtx";
 	private static final String BTCOBJ_INFO_PROCESSOR_LIMIT = "genproclimit";
 	private static final String BTCOBJ_INFO_PROTOCOL_VERSION = "protocolversion";
 	private static final String BTCOBJ_INFO_PROXY = "proxy";
+	private static final String BTCOBJ_INFO_IP = "ip";
 	private static final String BTCOBJ_INFO_TESTNET = "testnet";
-	private static final String BTCOBJ_INFO_TIME_OFFSET = "timeoffset";
+	//private static final String BTCOBJ_INFO_TIME_OFFSET = "timeoffset";
 	private static final String BTCOBJ_INFO_TRANSACTION_FEE = "paytxfee";
 	private static final String BTCOBJ_INFO_VERSION = "version";
 	private static final String BTCOBJ_INFO_WALLET_VERSION = "walletversion";
@@ -534,15 +539,19 @@ public class BtcJsonRpcHttpClient {
 			return null;
 		}
 		BtcInfo info = new BtcInfo();
-		info.setVersion(jsonLong(object, BTCOBJ_INFO_VERSION));
+		info.setVersion(object.getString(BTCOBJ_INFO_VERSION, ""));
 		info.setProtocolVersion(jsonLong(object,
 				BTCOBJ_INFO_PROTOCOL_VERSION));
 		info.setWalletVersion(jsonLong(object, BTCOBJ_INFO_WALLET_VERSION));
 		info.setBalance(jsonDouble(object, BTCOBJ_INFO_BALANCE));
+		info.setNewMint(jsonDouble(object, BTCOBJ_INFO_NEWMINT));
+		info.setStake(jsonDouble(object, BTCOBJ_INFO_STAKE));
+		info.setMoneySupply(jsonDouble(object, BTCOBJ_INFO_MONEY_SUPPLY));
 		info.setBlocks(jsonLong(object, BTCOBJ_INFO_BLOCKS));
-		info.setTimeOffset(jsonLong(object, BTCOBJ_INFO_TIME_OFFSET));
+		//info.setTimeOffset(jsonLong(object, BTCOBJ_INFO_TIME_OFFSET));
 		info.setConnections(jsonLong(object, BTCOBJ_INFO_CONNECTIONS));
 		info.setProxy(object.getString(BTCOBJ_INFO_PROXY, ""));
+		info.setIP(object.getString(BTCOBJ_INFO_IP, ""));
 		info.setDifficulty(jsonDouble(object, BTCOBJ_INFO_DIFFICULTY));
 		info.setTestnet(object.getBoolean(BTCOBJ_INFO_TESTNET, false));
 		info.setKeyPoolOldest(jsonLong(object, BTCOBJ_INFO_KEYPOOL_OLDEST));
@@ -591,6 +600,8 @@ public class BtcJsonRpcHttpClient {
 				BTCOBJ_INFO_PROCESSOR_LIMIT, -1));
 		info.setHashesPerSecond(jsonLong(object,
 				BTCOBJ_INFO_HASHES_PER_SECOND));
+		info.setNetworkGhps(jsonDouble(object,
+				BTCOBJ_INFO_NETWORK_GIGA_HASHES_PER_SECOND));
 		info.setPooledTransactions(jsonLong(object,
 				BTCOBJ_INFO_POOLED_TRANSACTIONS));
 		info.setTestnet(object.getBoolean(BTCOBJ_INFO_TESTNET, false));
