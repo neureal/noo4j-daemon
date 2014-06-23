@@ -134,6 +134,7 @@ public class BtcJsonRpcHttpClient {
 	private static final String BTCOBJ_COIN_AUX = "coinbaseaux";
 	private static final String BTCOBJ_COIN_VALUE = "coinbasevalue";
 	private static final String BTCOBJ_INFO_BALANCE = "balance";
+	private static final String BTCOBJ_INFO_UNCONFIRMED = "unconfirmed";
 	private static final String BTCOBJ_INFO_NEWMINT = "newmint";
 	private static final String BTCOBJ_INFO_STAKE = "stake";
 	private static final String BTCOBJ_INFO_MONEY_SUPPLY = "moneysupply";
@@ -544,6 +545,7 @@ public class BtcJsonRpcHttpClient {
 				BTCOBJ_INFO_PROTOCOL_VERSION));
 		info.setWalletVersion(jsonLong(object, BTCOBJ_INFO_WALLET_VERSION));
 		info.setBalance(jsonDouble(object, BTCOBJ_INFO_BALANCE));
+		info.setUnconfirmed(jsonDouble(object, BTCOBJ_INFO_UNCONFIRMED));
 		info.setNewMint(jsonDouble(object, BTCOBJ_INFO_NEWMINT));
 		info.setStake(jsonDouble(object, BTCOBJ_INFO_STAKE));
 		info.setMoneySupply(jsonDouble(object, BTCOBJ_INFO_MONEY_SUPPLY));
