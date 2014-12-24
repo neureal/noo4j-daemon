@@ -26,6 +26,7 @@ package org.noo4j.daemon;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,6 +65,8 @@ import org.noo4j.core.BtcUtil;
 import org.noo4j.core.BtcWork;
 
 public class BtcDaemon extends BtcJsonRpcHttpClient implements BtcApi {
+	private static final String BTCAPI_SUBMIT_VOTE = "submitvote";
+	private static final String BTCAPI_SUBMIT_WORK = "submitwork";
 	private static final String BTCAPI_ADD_MULTISIGNATURE_ADDRESS = "addmultisigaddress";
 	private static final String BTCAPI_ADD_NODE = "addnode";
 	private static final String BTCAPI_BACKUP_WALLET = "backupwallet";
@@ -75,6 +78,7 @@ public class BtcDaemon extends BtcJsonRpcHttpClient implements BtcApi {
 	private static final String BTCAPI_GET_ACCOUNT_ADDRESS = "getaccountaddress";
 	private static final String BTCAPI_GET_ADDED_NODE_INFORMATION = "getaddednodeinfo";
 	private static final String BTCAPI_GET_ADDRESSES_BY_ACCOUNT = "getaddressesbyaccount";
+	private static final String BTCAPI_GET_COINAGE = "getcoinage";
 	private static final String BTCAPI_GET_BALANCE = "getbalance";
 	private static final String BTCAPI_GET_BLOCK = "getblock";
 	private static final String BTCAPI_GET_BLOCK_COUNT = "getblockcount";
@@ -213,6 +217,30 @@ public class BtcDaemon extends BtcJsonRpcHttpClient implements BtcApi {
 		}
 	}
 
+	
+	@Override
+	public String submitVote(String api, BigDecimal payment,
+			BigInteger tick_count) throws BtcException {
+		JsonArray parameters = Json.createArrayBuilder()
+				.add(BtcUtil.notNull(payment)).add(BtcUtil.notNull(tick_count))
+				.add(BtcUtil.notNull(api))
+				.build();
+		return jsonString(invoke(BTCAPI_SUBMIT_VOTE,
+				parameters));
+	}
+	
+	@Override
+	public String submitWork(String api, BigDecimal payment,
+			BigInteger tick_index, String work) throws BtcException {
+		JsonArray parameters = Json.createArrayBuilder()
+				.add(BtcUtil.notNull(payment)).add(BtcUtil.notNull(tick_index))
+				.add(BtcUtil.notNull(work)).add(BtcUtil.notNull(api))
+				.build();
+		return jsonString(invoke(BTCAPI_SUBMIT_WORK,
+				parameters));
+	}
+	
+	
 	public String addMultiSignatureAddress(long required, List<String> keys)
 			throws BtcException {
 		return addMultiSignatureAddress(required, keys, "");
@@ -388,8 +416,21 @@ public class BtcDaemon extends BtcJsonRpcHttpClient implements BtcApi {
 		return addresses;
 	}
 
+	public BigDecimal getCoinage() throws BtcException {
+		return getCoinage(null);
+	}
+	
+	@Override
+	public BigDecimal getCoinage(String account)
+			throws BtcException {
+		JsonArray parameters;
+		if (account == null) parameters = Json.createArrayBuilder().build();
+		else parameters = Json.createArrayBuilder().add(BtcUtil.notNull(account)).build();
+		return jsonDouble(invoke(BTCAPI_GET_COINAGE, parameters));
+	}
+	
 	public BigDecimal getBalance() throws BtcException {
-		return getBalance("", 1);
+		return getBalance(null, 0);
 	}
 
 	public BigDecimal getBalance(long minConfirms) throws BtcException {
@@ -403,9 +444,11 @@ public class BtcDaemon extends BtcJsonRpcHttpClient implements BtcApi {
 	@Override
 	public BigDecimal getBalance(String account, long minConfirms)
 			throws BtcException {
-		JsonArray parameters = Json.createArrayBuilder()
+		JsonArray parameters;
+		if (account == null) parameters = Json.createArrayBuilder().build();
+		else parameters = Json.createArrayBuilder()
 				.add(BtcUtil.notNull(account))
-				.add(BtcUtil.atLeast(minConfirms, 1)).build();
+				.add(minConfirms).build();
 		return jsonDouble(invoke(BTCAPI_GET_BALANCE, parameters));
 	}
 
